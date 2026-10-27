@@ -332,7 +332,8 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1.15f),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // "REHBER" Butonu
                 BigHomeActionCard(
@@ -341,8 +342,10 @@ fun HomeScreen(
                     backgroundColor = TurkishEmerald,
                     contentColor = Color.White,
                     iconColor = Color.White,
-                    modifier = Modifier.weight(1f),
-                    fontSize = 20,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    fontSize = 19,
                     iconSize = 28,
                     onClick = onOpenContacts
                 )
@@ -354,9 +357,11 @@ fun HomeScreen(
                     backgroundColor = TurkishNavy,
                     contentColor = Color.White,
                     iconColor = Color.White,
-                    modifier = Modifier.weight(1f),
-                    fontSize = 18,
-                    iconSize = 28,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    fontSize = 17,
+                    iconSize = 26,
                     onClick = onOpenDialpad
                 )
             }
@@ -608,7 +613,7 @@ private fun BigHomeActionCard(
                 indication = null,
                 onClick = onClick
             )
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -621,12 +626,14 @@ private fun BigHomeActionCard(
                 tint = iconColor,
                 modifier = Modifier.size(iconSize.dp)
             )
-            Spacer(modifier = Modifier.width(14.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = text,
                 fontSize = fontSize.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = contentColor
+                color = contentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
