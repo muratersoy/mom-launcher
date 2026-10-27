@@ -39,10 +39,13 @@ import com.momlauncher.ui.gallery.GalleryScreen
 import com.momlauncher.ui.home.HomeScreen
 import com.momlauncher.ui.lock.LockScreen
 import com.momlauncher.ui.settings.SettingsScreen
+import com.momlauncher.ui.allapps.AllAppsScreen
 import com.momlauncher.ui.theme.MomLauncherTheme
 import com.momlauncher.ui.theme.PureBlack
 import com.momlauncher.data.NewsItem
 import com.momlauncher.data.NewsRepository
+import com.momlauncher.data.AppsRepository
+import com.momlauncher.data.AppItem
 import com.momlauncher.ui.news.NewsScreen
 import com.momlauncher.util.CallHelper
 import com.momlauncher.util.PermissionHelper
@@ -56,7 +59,8 @@ enum class ScreenState {
     CALL_LOG,
     GALLERY,
     NEWS,
-    SETTINGS
+    SETTINGS,
+    ALL_APPS
 }
 
 class MainActivity : ComponentActivity() {
@@ -67,12 +71,15 @@ class MainActivity : ComponentActivity() {
     private lateinit var photosRepo: PhotosRepository
     private lateinit var prayerRepo: PrayerTimesRepository
     private lateinit var newsRepo: NewsRepository
+    private lateinit var appsRepo: AppsRepository
 
     private val currentScreen = mutableStateOf(ScreenState.HOME)
     private val previousScreenBeforePicking = mutableStateOf(ScreenState.HOME)
     private val pickingSlot = mutableStateOf<Int?>(null)
 
     private val emergencyContactsList = mutableStateOf<List<EmergencyContact?>>(emptyList())
+    private val installedAppsList = mutableStateOf<List<AppItem>>(emptyList())
+    private val isAppsLoadingState = mutableStateOf(false)
     private val allContactsList = mutableStateOf<List<ContactItem>>(emptyList())
     private val callLogsList = mutableStateOf<List<CallLogEntry>>(emptyList())
     private val photosList = mutableStateOf<List<PhotoItem>>(emptyList())
@@ -128,6 +135,7 @@ class MainActivity : ComponentActivity() {
         photosRepo = PhotosRepository(applicationContext)
         prayerRepo = PrayerTimesRepository(applicationContext)
         newsRepo = NewsRepository(applicationContext)
+        appsRepo = AppsRepository(applicationContext)
 
         // Güncel haberleri arka planda önceden yükle
         loadNews(forceRefresh = false)
@@ -239,6 +247,11 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onOpenSettings = {
                                     currentScreen.value = ScreenState.SETTINGS
+                                },
+                                onOpenAllApps = {
+                                    Toast.makeText(this@MainActivity, "Torun Modu 👶", Toast.LENGTH_SHORT).show()
+                                    currentScreen.value = ScreenState.ALL_APPS
+                                    loadInstalledApps()
                                 },
                                 onSelectEmergencySlot = { slot ->
                                     searchQuery = ""
@@ -376,6 +389,22 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        ScreenState.ALL_APPS -> {
+                            AllAppsScreen(
+                                apps = installedAppsList.value,
+                                isLoading = isAppsLoadingState.value,
+                                onLaunchApp = { app ->
+                                    val ok = appsRepo.launchApp(app.packageName)
+                                    if (!ok) {
+                                        Toast.makeText(this@MainActivity, "Uygulama açılamadı", Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                onBack = {
+                                    currentScreen.value = ScreenState.HOME
+                                }
+                            )
+                        }
                     }
 
                     if (showAddContactDialog.value) {
@@ -441,6 +470,11 @@ override fun onNewIntent(intent: Intent) {
     hideSystemBars()
     checkLockState()
     checkActiveCallAndRedirect()
+    if (intent.hasCategory(Intent.CATEGORY_HOME) || intent.action == Intent.ACTION_MAIN) {
+        if (currentScreen.value != ScreenState.HOME) {
+            currentScreen.value = ScreenState.HOME
+        }
+    }
 }
 
 private fun checkLockState() {
@@ -576,6 +610,14 @@ private fun checkActiveCallAndRedirect() {
             isNewsLoadingState.value = true
             newsList.value = newsRepo.getNews(forceRefresh)
             isNewsLoadingState.value = false
+        }
+    }
+
+    private fun loadInstalledApps() {
+        lifecycleScope.launch {
+            isAppsLoadingState.value = true
+            installedAppsList.value = appsRepo.getInstalledApps()
+            isAppsLoadingState.value = false
         }
     }
 }

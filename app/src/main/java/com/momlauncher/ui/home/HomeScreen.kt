@@ -64,6 +64,7 @@ fun HomeScreen(
     onOpenGallery: () -> Unit,
     onOpenNews: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenAllApps: () -> Unit = {},
     onSelectEmergencySlot: (Int) -> Unit,
     onRequestPermissions: () -> Unit,
     onRequestDialerRole: () -> Unit,
@@ -196,6 +197,12 @@ fun HomeScreen(
                         .clip(RoundedCornerShape(18.dp))
                         .background(DarkSurfaceVariant)
                         .border(2.dp, BorderGray, RoundedCornerShape(18.dp))
+                        .combinedClickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onDoubleClick = onOpenAllApps,
+                            onClick = { /* Tek tıkta bir şey yapmaz */ }
+                        )
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -246,6 +253,12 @@ fun HomeScreen(
                     .clip(RoundedCornerShape(18.dp))
                     .background(DarkSurfaceVariant)
                     .border(2.dp, BorderGray, RoundedCornerShape(18.dp))
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onDoubleClick = onOpenAllApps,
+                        onClick = { /* Tek tıkta bir şey yapmaz */ }
+                    )
                     .padding(vertical = 6.dp, horizontal = 14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
