@@ -18,11 +18,22 @@ Yaşlılar ve büyüklerimiz için özel olarak tasarlanmış; karmaşık menül
   * **Haberler:** Büyük puntolarla rahatça okunabilen güncel TRT Haber akışı.
 * **👶 Torun Modu (Gizli Kısayol):** Sağ üstteki Namaz kartına **çift tıklandığında** cihazdaki tüm oyun ve uygulamaların listelendiği, hızlı arama çubuklu gizli "Torun Modu" açılır.
 
+## 📥 Hazır APK İndir (Doğrudan Telefona Kur)
+
+Kod derlemekle veya Android Studio ile uğraşmak istemiyorsanız, hazır derlenmiş en güncel APK'yı doğrudan telefonunuza indirebilirsiniz:
+
+👉 **[MomLauncher.apk İndir (v1.0.0)](https://github.com/muratersoy/mom-launcher/raw/main/MomLauncher.apk)** *(~16 MB)*
+
+> 💡 **Nasıl Kurulur?**
+> 1. Yukarıdaki bağlantıya Android telefonunuzdan dokunup dosyayı indirin.
+> 2. İndirilen dosyayı açın (varsa *"Bilinmeyen kaynaklardan yüklemeye izin ver"* onayını verin).
+> 3. **"Yükle"** butonuna basarak kurulumu saniyeler içinde tamamlayın.
+
 ---
 
-## 🚀 En Kolay Yoldan APK Nasıl Üretilir ve Kullanılır?
+## 🚀 Kendiniz APK Üretmek İsterseniz (Alternatif Yollar)
 
-MomLauncher'ı bir Android telefona kurmak için APK dosyasını derlemenin 2 pratik yolu vardır.
+Uygulamanın kodlarını kendiniz derleyip APK üretmek isterseniz aşağıdaki pratik yöntemleri kullanabilirsiniz:
 
 ### Yöntem 1: Terminal / Komut Satırından Tek Komutla (En Kolay Yol)
 
