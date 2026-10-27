@@ -12,6 +12,7 @@ import java.text.Collator
 import java.util.Locale
 
 data class AppItem(
+    val id: String,
     val name: String,
     val packageName: String,
     val iconBitmap: Bitmap? = null
@@ -37,11 +38,14 @@ class AppsRepository(private val context: Context) {
 
         val myPackageName = context.packageName
         val appList = mutableListOf<AppItem>()
+        val seenPackages = mutableSetOf<String>()
 
         for (info in resolveInfos) {
             val pkg = info.activityInfo?.packageName ?: continue
             // Kendi launcher uygulamamızı hariç tut
             if (pkg == myPackageName) continue
+            // Aynı paketi birden fazla launcher activity'si olsa bile tekil tut
+            if (!seenPackages.add(pkg)) continue
 
             val label = info.loadLabel(pm)?.toString()?.trim() ?: pkg
             val drawable = try {
@@ -59,7 +63,7 @@ class AppsRepository(private val context: Context) {
                 null
             }
 
-            appList.add(AppItem(name = label, packageName = pkg, iconBitmap = bitmap))
+            appList.add(AppItem(id = pkg, name = label, packageName = pkg, iconBitmap = bitmap))
         }
 
         val collator = Collator.getInstance(Locale("tr", "TR")).apply {

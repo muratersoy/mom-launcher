@@ -53,7 +53,7 @@ fun AllAppsScreen(
     val focusManager = LocalFocusManager.current
 
     val filteredApps = remember(apps, searchQuery) {
-        if (searchQuery.isBlank()) {
+        val list = if (searchQuery.isBlank()) {
             apps
         } else {
             val q = searchQuery.trim().lowercase(Locale("tr", "TR"))
@@ -62,6 +62,7 @@ fun AllAppsScreen(
                         it.packageName.lowercase(Locale("tr", "TR")).contains(q)
             }
         }
+        list.distinctBy { it.id }
     }
 
     Column(
@@ -232,7 +233,7 @@ fun AllAppsScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(filteredApps, key = { it.packageName }) { app ->
+                    items(filteredApps, key = { it.id }) { app ->
                         AppGridItem(
                             app = app,
                             onClick = { onLaunchApp(app) }
