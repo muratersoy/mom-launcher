@@ -44,8 +44,17 @@ class CallLogRepository(private val context: Context) {
     suspend fun getRecentMissedCalls(limit: Int = 3): List<CallLogEntry> = withContext(Dispatchers.IO) {
         val allLogs = getCallLogs(limit = 40)
         val dismissedIds = getDismissedMissedCallIds()
+        val now = System.currentTimeMillis()
+        val oneDayMillis = DateUtils.DAY_IN_MILLIS // 24 saat (86.400.000 ms)
+
         allLogs
-            .filter { it.type == CallDirection.MISSED && !dismissedIds.contains(it.id) }
+            .filter {
+                it.type == CallDirection.MISSED &&
+                !dismissedIds.contains(it.id) &&
+                it.timestamp > 0L &&
+                (now - it.timestamp) < oneDayMillis &&
+                (now - it.timestamp) >= -60_000L // Ufak saat farkları için tolerans
+            }
             .take(limit)
     }
 
