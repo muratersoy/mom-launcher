@@ -280,20 +280,26 @@ fun HomeScreen(
             modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
         )
 
+        val now = System.currentTimeMillis()
+        val activeMissedCalls = remember(missedCalls, now) {
+            val oneDayMillis = 24 * 60 * 60 * 1000L
+            missedCalls.filter { (now - it.timestamp) in -60_000L..oneDayMillis }
+        }
+
         EmergencyContactsGrid(
             contacts = emergencyContacts,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(if (missedCalls.isNotEmpty()) 0.95f else 1.05f),
+                .weight(if (activeMissedCalls.isNotEmpty()) 0.95f else 1.05f),
             onCall = { number -> CallHelper.makeCall(context, number) },
             onLongClick = { slot -> onSelectEmergencySlot(slot) }
         )
 
-        // Hızlı Arama ile Tuşlar Arasında: Cevapsız Aramalar (3 adede kadar)
-        if (missedCalls.isNotEmpty()) {
+        // Hızlı Arama ile Tuşlar Arasında: Son 24 Saatteki Cevapsız Aramalar
+        if (activeMissedCalls.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
             MissedCallsSection(
-                missedCalls = missedCalls,
+                missedCalls = activeMissedCalls,
                 onCallBack = onCallBackMissedCall,
                 onDismiss = onDismissMissedCall
             )
@@ -305,7 +311,7 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(if (missedCalls.isNotEmpty()) 1.2f else 1.35f),
+                .weight(if (activeMissedCalls.isNotEmpty()) 1.2f else 1.35f),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             // "REHBER" ve "TUŞLARLA ARA" Butonları (Yan Yana)
@@ -788,41 +794,66 @@ private fun MissedCallItem(
     onDismiss: () -> Unit
 ) {
     val relativeTime = formatRelativeTime(entry.timestamp)
-    val displayText = "${entry.name} $relativeTime aradı"
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(14.dp))
             .background(SoftCreamSurface)
-            .border(1.5.dp, TurkishBordeaux.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
-            .padding(horizontal = 10.dp, vertical = 5.dp),
+            .border(1.5.dp, TurkishBordeaux.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
+            .padding(horizontal = 12.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Sol Alan: İkon + 2 Satır İsim ve Zaman Bilgisi
         Row(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.CallMissed,
-                contentDescription = null,
-                tint = TurkishBordeaux,
-                modifier = Modifier.size(22.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = displayText,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = DeepCharcoalText,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(TurkishBordeaux.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CallMissed,
+                    contentDescription = null,
+                    tint = TurkishBordeaux,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 1. Satır: Arayan Kişinin İsmi (Net, büyük, kısaltılmadan rahatça okunur)
+                Text(
+                    text = entry.name,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Black,
+                    color = DeepCharcoalText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                // 2. Satır: Ne zaman aradığı (Örn: 1 saat önce aradı)
+                Text(
+                    text = "$relativeTime aradı",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TurkishBordeaux,
+                    maxLines = 1
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(10.dp))
 
+        // Sağ Alan: GERİ ARA ve BOŞVER Butonları
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -837,7 +868,7 @@ private fun MissedCallItem(
                         indication = null,
                         onClick = onCallBack
                     )
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -859,14 +890,14 @@ private fun MissedCallItem(
                         indication = null,
                         onClick = onDismiss
                     )
-                    .padding(horizontal = 8.dp, vertical = 6.dp),
+                    .padding(horizontal = 10.dp, vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "BOŞVER",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = WarmMutedText
+                    color = DeepCharcoalText
                 )
             }
         }
@@ -880,16 +911,13 @@ private fun formatRelativeTime(timestamp: Long): String {
 
     val minutes = diffMillis / (60 * 1000)
     val hours = diffMillis / (60 * 60 * 1000)
-    val days = diffMillis / (24 * 60 * 60 * 1000)
 
     return when {
         minutes < 2 -> "az önce"
-        minutes < 60 -> "$minutes dk önce"
+        minutes < 60 -> "$minutes dakika önce"
         hours == 1L -> "1 saat önce"
         hours < 24 -> "$hours saat önce"
-        days == 1L -> "dün"
-        days < 7 -> "$days gün önce"
-        else -> SimpleDateFormat("d MMMM", Locale("tr", "TR")).format(Date(timestamp))
+        else -> "dün"
     }
 }
 
