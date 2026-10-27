@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Kolay Başlatıcı</string>
+
+    <!-- Ana Ekran -->
+    <string name="contacts_button">REHBER</string>
+    <string name="call_log_button">SON ARAMALAR</string>
+    <string name="camera_button">KAMERA</string>
+    <string name="gallery_button">FOTOĞRAFLAR</string>
+    <string name="news_button">HABERLER</string>
+    <string name="settings_button">AYARLAR</string>
+    <string name="return_to_call_banner">GÖRÜŞMEYE DÖN</string>
+
+    <!-- Haberler -->
+    <string name="news_screen_title">HABERLER</string>
+    <string name="next_news">SONRAKİ HABER</string>
+    <string name="prev_news">ÖNCEKİ HABER</string>
+    <string name="news_loading">Haberler yükleniyor…</string>
+    <string name="news_error">Haberler yüklenemedi</string>
+    <string name="news_refresh">YENİLE</string>
+    <string name="no_news">Güncel haber bulunamadı</string>
+
+    <!-- Acil Kişiler -->
+    <string name="emergency_contacts_title">HIZLI ARAMA</string>
+    <string name="empty_slot_hint">Kişi Ekle\n(Basılı Tut)</string>
+    <string name="select_contact_dialog_title">Kişi Seçin</string>
+
+    <!-- Rehber Ekranı -->
+    <string name="contacts_screen_title">REHBER</string>
+    <string name="search_contact_hint">İsim veya numara ara…</string>
+    <string name="no_contacts_found">Kayıtlı kişi bulunamadı</string>
+    <string name="back_to_home">ANA SAYFA</string>
+
+    <!-- Son Aramalar -->
+    <string name="call_log_screen_title">SON ARAMALAR</string>
+    <string name="no_call_log_found">Arama geçmişi boş</string>
+    <string name="call_type_incoming">Gelen Arama</string>
+    <string name="call_type_outgoing">Giden Arama</string>
+    <string name="call_type_missed">Cevapsız Arama</string>
+
+    <!-- Arama Ekranı -->
+    <string name="incoming_call_title">GELEN ARAMA</string>
+    <string name="outgoing_call_title">ARANIYOR…</string>
+    <string name="call_active_title">TELEFON DAHA KAPANMADI\nKIRMIZIYA BAS</string>
+    <string name="call_ended_title">ARAMA BİTTİ</string>
+    <string name="unknown_caller">Bilinmeyen Numara</string>
+    <string name="answer_call">CEVAPLA</string>
+    <string name="reject_call">REDDET</string>
+    <string name="end_call">KAPAT</string>
+    <string name="speaker_on">HOPARLÖR AÇIK</string>
+    <string name="speaker_off">HOPARLÖR</string>
+
+    <!-- İzinler ve Roller -->
+    <string name="permission_title">Gerekli İzinler</string>
+    <string name="permission_desc">Telefon aramalarını yanıtlamak, kişileri göstermek ve hızlı arama yapabilmek için lütfen izinleri onaylayın.</string>
+    <string name="grant_permissions_button">İZİNLERİ ONAYLA</string>
+    <string name="set_default_dialer_button">VARSAYILAN TELEFON YAP</string>
+    <string name="set_default_home_button">VARSAYILAN BAŞLATICI YAP</string>
+    <string name="dialer_role_desc">Gelen ve giden aramaları büyük butonlarla kolayca yönetebilmek için Kolay Başlatıcı\'yı varsayılan telefon uygulaması olarak seçin.</string>
+
+    <!-- Bildirim -->
+    <string name="notification_channel_name">Aktif Arama Bildirimi</string>
+    <string name="notification_channel_desc">Süren görüşmeleri gösterir</string>
+    <string name="ongoing_call_notification_title">Telefon Görüşmesi Devam Ediyor</string>
+    <string name="ongoing_call_notification_text">Görüşme ekranına dönmek için dokunun</string>
+</resources>

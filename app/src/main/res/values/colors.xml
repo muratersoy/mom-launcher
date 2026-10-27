@@ -1,0 +1,12 @@
+<resources>
+    <color name="black">#000000</color>
+    <color name="dark_surface">#181818</color>
+    <color name="dark_surface_variant">#242424</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow_primary">#FFD600</color>
+    <color name="call_green">#00C853</color>
+    <color name="call_red">#D50000</color>
+    <color name="call_blue">#2979FF</color>
+    <color name="gray_text">#B0B0B0</color>
+    <color name="gray_border">#484848</color>
+</resources>
